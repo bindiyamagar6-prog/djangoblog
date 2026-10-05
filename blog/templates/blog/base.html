@@ -1,31 +1,29 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}DjangoBlog{% endblock %}</title>
-    <!-- Bootstrap CSS for easy header styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Dark Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">DjangoBlog</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
-                </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+                <img src="{% static 'blog/images/cat.jpg' %}" alt="Logo" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                DjangoBlog
+            </a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+                <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                <a class="nav-link" href="{% url 'post_create' %}">New Post</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <main class="container my-4">
         {% block content %}
         {% endblock %}
-    </div>
-
-</body>
-</html>
+    
