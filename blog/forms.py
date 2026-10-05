@@ -1,6 +1,7 @@
 from django import forms
 from .models import Post
 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -17,3 +18,11 @@ class PostForm(forms.ModelForm):
         if len(title) < 5:
             raise forms.ValidationError("Title must be at least 5 characters long.")
         return title
+
+    def clean(self):
+        cleaned_data = super().clean()
+        title = cleaned_data.get("title")
+        content = cleaned_data.get("content")
+        if title and content and title.lower() in content.lower()[:50]:
+            raise forms.ValidationError("Don't repeat the title verbatim at the start of the content.")
+        return cleaned_data
