@@ -1,68 +1,58 @@
 {% extends "blog/base.html" %}
-{% block title %}{{ title }}{% endblock %}
-
+{% block title %}Home{% endblock %}
 {% block content %}
-<div class="text-center">
-  <h1 class="mb-4">Welcome to {{ title }}</h1>
+
+<div class="home-heading">
+  <h1 class="home-title">Welcome To My Blog</h1>
+  <div class="home-line"></div>
+  <p class="home-subtitle">Travel stories, guides and tips from around Japan.</p>
 </div>
 
 <div class="row">
   {% for post in page_obj %}
-  <div class="col-md-4 mb-4">
-    <div class="card h-100">
-      <div class="card-body">
-        <h5 class="card-title">{{ post.title }}</h5>
-        <p class="card-text">{{ post.content|truncatewords:20 }}</p>
-        <a href="{% url 'post_detail' post.slug %}" class="btn btn-primary">Read more</a>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+
+        {% if post.cover_image %}
+          <img src="{{ post.cover_image.url }}" alt="{{ post.title }}" class="card-img-top"
+              style="display:block; width:100%; height:180px; object-fit:cover; object-position:center top;">
+        {% else %}
+          <div class="card-img-top" style="height:180px; background:#e9ecef;"></div>
+        {% endif %}
+
+        <div class="card-body">
+          <h5 class="card-title">{{ post.title }}</h5>
+          <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+          <a href="{% url 'post_detail' post.slug %}" class="btn btn-primary">Read more</a>
+        </div>
       </div>
     </div>
-  </div>
   {% empty %}
-  <p>No posts yet.</p>
+    <p>No posts yet.</p>
   {% endfor %}
 </div>
 
 <nav>
-  <ul class="pagination">
+  <ul class="pagination justify-content-center">
     {% if page_obj.has_previous %}
-    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
     {% endif %}
     <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
     {% if page_obj.has_next %}
-    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
     {% endif %}
   </ul>
 </nav>
-
-<hr class="my-5">
-<div class="text-center">
-  <h4 class="fw-bold mb-4">Browse by Category</h4>
-  <div class="d-flex justify-content-center flex-wrap gap-2">
+<hr>
+<div class="cat-section">
+  <h4 class="cat-heading">Categories</h4>
+  <div class="cat-list">
     {% for category in categories %}
-    <a href="#" class="btn btn-light rounded-pill px-3 py-2 d-flex align-items-center gap-2">
-      {{ category.name }}
-      <span class="badge bg-light text-dark border rounded-pill">{{ category.posts.count }}</span>
-    </a>
+      <a href="{% url 'category_posts' category.slug %}" class="cat-chip">
+        {{ category.name }}
+        <span class="cat-count">{{ category.post_count }}</span>
+      </a>
     {% endfor %}
-  </div>
-</div>
-
-<hr class="my-5">
-
-<!-- Formulário de criação de artigo mantido dentro do mesmo bloco -->
-<div class="row justify-content-center">
-  <div class="col-md-8">
-    <h2 class="mb-4">新規記事の作成</h2>
-    
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      
-      <div class="mt-3">
-        <button type="submit" class="btn btn-primary">保存する</button>
-        <a href="{% url 'home' %}" class="btn btn-secondary">キャンセル</a>
-      </div>
-    </form>
   </div>
 </div>
 {% endblock %}
