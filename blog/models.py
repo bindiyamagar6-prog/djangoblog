@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.conf import settings
+from PIL import Image
 
 
 class Category(models.Model):
@@ -61,7 +62,7 @@ class Post(models.Model):
             while Post.objects.filter(slug=slug).exists():
                 slug = f"{base_slug}-{counter}"
                 counter += 1
-        self.slug = slug
+            self.slug = slug
         super().save(*args, **kwargs)
         if self.cover_image:
             img_path = self.cover_image.path
