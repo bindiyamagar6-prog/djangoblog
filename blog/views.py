@@ -8,6 +8,8 @@ from .models import Post, Category
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.db import models
 
 
 
@@ -26,7 +28,16 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
     template_name = "blog/post_detail.html"
+    context_object_name = "post"
 
+    def get_queryset(self):
+        post = Post.objects.filter(status="published")
+        if self.request.user.is_authenticated:
+            post = Post.objects.filter(
+                models.Q(status="published") | models.Q(author=self.request.user)
+            )
+        return post
+    
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -36,6 +47,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        messages.success(self.request, "Post published successfully!")
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -106,3 +118,6 @@ def about(request):
 
 def contact(request):
     return render(request, "blog/contact.html")
+
+def custom_403(request, exception=None):
+    return render(request, "blog/403.html", status=403)

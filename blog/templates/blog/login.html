@@ -17,10 +17,15 @@
           {% endfor %}
         </div>
       {% endfor %}
-      <button type="submit" class="auth-btn">Log in</button>
-    </form>
+      
+<button type="submit" class="btn-login">Log in</button>
+<p class="forgot-link">
+  <a href="{% url 'password_reset' %}">Forgot your password?</a>
+</p>
 
-    <p class="auth-footer">New here? <a href="{% url 'register' %}">Create an account</a></p>
+<p class="switch-link">
+  New here? <a href="{% url 'register' %}">Create an account</a>
+</p>
   </div>
 </div>
 {% endblock %}
